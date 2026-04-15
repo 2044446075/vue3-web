@@ -197,11 +197,11 @@ const loadArticleDetail = async () => {
   loading.value = true
   error.value = ''
   try {
-    if (userStore.token && (!userStore.profileAuth || !userStore.profileDetail)) {
-      await userStore.getUserInfo()
-    }
     const res = await getItemDetail(itemId.value)
     articleDetail.value = res.data || null
+    if (userStore.token && (!userStore.profileAuth || !userStore.profileDetail)) {
+      userStore.getUserInfo().catch(() => {})
+    }
     if (userStore.token) {
       await markItemReadApi(itemId.value).catch(() => {})
     }

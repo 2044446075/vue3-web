@@ -37,7 +37,12 @@ export const useUserStore = defineStore('user', {
       }
       this.token = token
       this.isLoggedIn = true
-      await this.getUserInfo()
+      try {
+        await this.getUserInfo()
+      } catch (error) {
+        this.clearSession()
+        throw error
+      }
     },
     async getUserInfo() {
       const authRes = await getInfoApi()

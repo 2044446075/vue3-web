@@ -356,14 +356,15 @@ const toggleItemLike = async (item) => {
 const markItemRead = async (itemId) => {
   const id = Number(itemId || 0)
   if (!id || !userStore.token || isItemRead(id)) {
-    return
+    return false
   }
 
-  updateReadItemIds(id, true)
   try {
     await markItemReadApi(id)
+    updateReadItemIds(id, true)
+    return true
   } catch {
-    // ignore read mark errors to avoid blocking navigation
+    return false
   }
 }
 
@@ -403,7 +404,9 @@ const openArticleDetail = (itemId) => {
   if (!id) {
     return
   }
-  markItemRead(id)
+  if (userStore.token) {
+    markItemRead(id).catch(() => {})
+  }
   router.push(`/week06/Work03/${id}`)
 }
 
@@ -437,16 +440,6 @@ const loadUserArticles = async () => {
   authorAvatar.value = ''
 
   try {
-    if (userStore.token) {
-      await refreshFollowedUserIds()
-      await refreshLikedItemIds()
-      await refreshReadItemIds()
-    } else {
-      followedUserIds.value = []
-      likedItemIds.value = []
-      readItemIds.value = []
-    }
-
     const res = await getMyItems(userUuid.value)
     const items = normalizeArray(res.data).sort((a, b) => {
       const aTime = new Date(a?.create_time || 0).getTime()
@@ -463,6 +456,18 @@ const loadUserArticles = async () => {
     }
 
     articles.value = items.map((item) => mapArticleCard(item))
+
+    if (userStore.token) {
+      Promise.allSettled([
+        refreshFollowedUserIds(),
+        refreshLikedItemIds(),
+        refreshReadItemIds()
+      ]).catch(() => {})
+    } else {
+      followedUserIds.value = []
+      likedItemIds.value = []
+      readItemIds.value = []
+    }
   } catch (err) {
     if (err?.response?.status === 404) {
       articles.value = []
@@ -489,6 +494,7 @@ watch(
   () => {
     if (!userStore.token) {
       followedUserIds.value = []
+      likedItemIds.value = []
       readItemIds.value = []
     }
     loadUserArticles()

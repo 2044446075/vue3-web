@@ -11,7 +11,10 @@ let isRedirectingForUnauthorized = false
 
 const isAuthRequest = (url) => {
   const raw = String(url || '')
-  return raw.includes('/auth/jwt/login') || raw.includes('/auth/register')
+  return raw.includes('/auth/jwt/login') ||
+    raw.includes('/auth/register') ||
+    raw.includes('/auth/secure-login') ||
+    raw.includes('/auth/secure-login/key')
 }
 
 service.interceptors.request.use((config) => {

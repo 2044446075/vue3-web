@@ -737,10 +737,9 @@ const resolveErrorMessage = (error, fallback) => {
 }
 
 const buildArticleCard = (item, detail) => {
-  const images = normalizeArray(detail?.images)
   const comments = normalizeArray(detail?.comments)
   const hasCommentList = Array.isArray(detail?.comments)
-  const cover = detail?.src || item?.src || images[0]?.url || ''
+  const cover = detail?.src || item?.src || ''
   const rawTitle =
     item?.title ||
     detail?.title ||
@@ -755,7 +754,7 @@ const buildArticleCard = (item, detail) => {
     detail?.description ||
     ''
   const commentText = comments.map((comment) => `${comment?.content || ''} ${comment?.hint || ''}`).join(' ')
-  const searchText = `${rawTitle} ${rawContent} ${commentText}`.toLowerCase()
+  const searchText = `${rawTitle} ${rawContent} ${item?.owner?.name || ''} ${commentText}`.toLowerCase()
 
   return {
     id: item.id,
@@ -908,14 +907,15 @@ const ensureUserReady = async () => {
 const markItemRead = async (itemId) => {
   const id = Number(itemId || 0)
   if (!id || !userStore.token || isItemRead(id)) {
-    return
+    return false
   }
 
-  updateReadItemIds(id, true)
   try {
     await markItemReadApi(id)
+    updateReadItemIds(id, true)
+    return true
   } catch {
-    // ignore read mark errors to avoid blocking navigation
+    return false
   }
 }
 
@@ -1039,15 +1039,11 @@ const loadAllArticles = async ({ force = false, keepPosition = false, touchCount
           return bTime - aTime
         })
 
-    const detailTasks = await Promise.allSettled(items.map((item) => getItemDetail(item.id).then((r) => r.data)))
     if (requestTag !== allRequestTag) {
       return
     }
 
-    allArticles.value = items.map((item, index) => {
-      const detail = detailTasks[index]?.status === 'fulfilled' ? detailTasks[index].value : null
-      return buildArticleCard(item, detail)
-    })
+    allArticles.value = items.map((item) => buildArticleCard(item, null))
     loadedSuccessfully = true
   } catch (error) {
     if (requestTag !== allRequestTag) {
@@ -1104,11 +1100,7 @@ const loadMyItems = async (force = false) => {
       return bTime - aTime
     })
 
-    const detailTasks = await Promise.allSettled(items.map((item) => getItemDetail(item.id).then((r) => r.data)))
-    myItems.value = items.map((item, index) => {
-      const detail = detailTasks[index]?.status === 'fulfilled' ? detailTasks[index].value : null
-      return buildArticleCard(item, detail)
-    })
+    myItems.value = items.map((item) => buildArticleCard(item, null))
     loadedSuccessfully = true
   } catch (error) {
     if (error?.response?.status === 404) {
@@ -1243,11 +1235,7 @@ const loadFollowUnreadItems = async (force = false) => {
       return bTime - aTime
     })
 
-    const detailTasks = await Promise.allSettled(items.map((item) => getItemDetail(item.id).then((r) => r.data)))
-    followUnreadItems.value = items.map((item, index) => {
-      const detail = detailTasks[index]?.status === 'fulfilled' ? detailTasks[index].value : null
-      return buildArticleCard(item, detail)
-    })
+    followUnreadItems.value = items.map((item) => buildArticleCard(item, null))
     loadedSuccessfully = true
   } catch (error) {
     if (error?.response?.status === 404) {
@@ -1313,9 +1301,8 @@ const openArticleDetail = (itemId, options = {}) => {
   if (activeTab.value === 'all') {
     rememberAllScrollPosition()
   }
-  markItemRead(id)
-  if (activeTab.value === 'follows') {
-    followUnreadItems.value = followUnreadItems.value.filter((item) => Number(item?.id || 0) !== id)
+  if (userStore.token) {
+    markItemRead(id).catch(() => {})
   }
   router.push({
     path: `/week06/Work03/${id}`,
@@ -1362,25 +1349,15 @@ const confirmDeleteMyItem = async () => {
     return
   }
   deleteItemDialogVisible.value = false
-  const originalConfirm = typeof window !== 'undefined' ? window.confirm : null
   try {
-    if (originalConfirm) {
-      window.confirm = () => true
-    }
     await deleteMyItem(item)
   } finally {
-    if (originalConfirm) {
-      window.confirm = originalConfirm
-    }
     pendingDeleteItem.value = null
   }
 }
 
 const deleteMyItem = async (item) => {
   if (!item?.id || !canEditItem(item) || deletingItemId.value !== null) {
-    return
-  }
-  if (typeof window !== 'undefined' && window.confirm('确定删除这篇文章吗？') !== true) {
     return
   }
 
