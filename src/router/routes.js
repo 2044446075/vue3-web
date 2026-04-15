@@ -1,45 +1,29 @@
-﻿const routes = [
+const routes = [
   {
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('pages/IndexPage.vue') },
 
-      { path: 'week01/Work01', component: () => import('pages/week01/ChildModule.vue') },
-      { path: 'week01/Work02', component: () => import('pages/week01/UserLogin.vue') },
+      { path: 'auth/login', component: () => import('pages/auth/LoginPage.vue') },
+      { path: 'auth/register', component: () => import('pages/auth/RegisterPage.vue') },
 
-      { path: 'week02/Work01', component: () => import('pages/week02/NutLogin.vue') },
-      { path: 'week02/Work02', component: () => import('pages/week02/NutProfile.vue') },
-      { path: 'week02/Work03', component: () => import('pages/week02/NutUpload.vue') },
+      { path: 'app', component: () => import('pages/app/AppShellPage.vue') },
+      { path: 'profile/settings', component: () => import('pages/profile/SettingsPage.vue') },
 
       {
-        path: 'week03/Work01',
-        component: () => import('pages/week03/MyProfile.vue'),
-        meta: { requiresAuth: true }
-      },
-      { path: 'week03/Work02', component: () => import('pages/week03/MyRegister.vue') },
-
-      { path: 'week04/Work01', component: () => import('pages/week04/NutBottomNav.vue') },
-      { path: 'week04/Work02', component: () => import('pages/week04/NutSettings.vue') },
-      { path: 'week04/Work03/:itemId', component: () => import('pages/week05/NutItemComments.vue') },
-
-      { path: 'week05/Work01', component: () => import('pages/week04/NutBottomNav.vue') },
-      { path: 'week05/Work02', component: () => import('pages/week04/NutSettings.vue') },
-      { path: 'week05/Work03/:itemId', component: () => import('pages/week05/NutItemComments.vue') },
-
-      { path: 'week06/Work01', component: () => import('pages/week04/NutBottomNav.vue') },
-      {
-        path: 'week06/Work02',
-        component: () => import('pages/week06/NutItemEditor.vue'),
+        path: 'articles/new',
+        component: () => import('pages/article/ArticleEditorPage.vue'),
         meta: { requiresAuth: true }
       },
       {
-        path: 'week06/Work02/:itemId',
-        component: () => import('pages/week06/NutItemEditor.vue'),
+        path: 'articles/:itemId/edit',
+        component: () => import('pages/article/ArticleEditorPage.vue'),
         meta: { requiresAuth: true }
       },
-      { path: 'week06/Work03/:itemId', component: () => import('pages/week06/NutItemDetail.vue') },
-      { path: 'week06/Work04/:userUuid', component: () => import('pages/week06/UserArticleList.vue') }
+      { path: 'articles/:itemId', component: () => import('pages/article/ArticleDetailPage.vue') },
+      { path: 'articles/:itemId/comments', component: () => import('pages/comment/ArticleCommentsPage.vue') },
+      { path: 'authors/:userUuid/articles', component: () => import('pages/article/AuthorArticlePage.vue') }
     ]
   },
 
@@ -50,4 +34,3 @@
 ]
 
 export default routes
-

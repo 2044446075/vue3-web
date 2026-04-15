@@ -53,11 +53,11 @@ const form = reactive({ username: '', password: '' })
 const coverUrl = '/week02-cover.jpg'
 
 const goProfile = () => {
-  router.push('/week04/Work01')
+  router.push('/app')
 }
 
 const goRegister = () => {
-  router.push('/week03/Work02')
+  router.push('/auth/register')
 }
 
 const handleLogin = async () => {

@@ -72,7 +72,7 @@
 import { computed, reactive, ref } from 'vue'
 import { Toast } from '@nutui/nutui'
 import { useRouter } from 'vue-router'
-import { registerApi } from 'src/api/user'
+import { registerApi } from 'src/api/auth.js'
 import { useUserStore } from 'src/stores/useUserStore'
 
 const studentTitle = '23211860236 吴秀东'
@@ -159,7 +159,7 @@ const buildDefaultProfileName = () => {
 }
 
 const goLogin = () => {
-  router.push('/week02/Work01')
+  router.push('/auth/login')
 }
 
 const handleRegister = async () => {
@@ -184,7 +184,7 @@ const handleRegister = async () => {
     }
 
     Toast.success('注册成功，已自动登录')
-    router.push('/week03/Work01')
+    router.push('/app')
   } catch (error) {
     const message = resolveErrorMessage(error, '注册失败')
     Toast.fail(message)

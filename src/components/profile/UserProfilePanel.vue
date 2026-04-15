@@ -114,7 +114,7 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import { Toast } from '@nutui/nutui'
 import { useRouter } from 'vue-router'
-import ImageUploader from 'components/ImageUploader.vue'
+import ImageUploader from 'components/common/ImageUploader.vue'
 import request from 'src/api/request'
 import { useUserStore } from 'src/stores/useUserStore'
 
@@ -137,7 +137,7 @@ const props = defineProps({
   },
   settingsRoute: {
     type: String,
-    default: '/week04/Work02'
+    default: '/profile/settings'
   },
   redirectOnLogout: {
     type: Boolean,
@@ -317,7 +317,7 @@ const handleLogout = async () => {
     await userStore.handleLogout()
     Toast.text('已退出登录')
     if (props.redirectOnLogout) {
-      router.push('/week02/Work01')
+      router.push('/auth/login')
     }
   } catch (error) {
     const message = error.response?.data?.detail || error.message || '退出失败'
@@ -326,7 +326,7 @@ const handleLogout = async () => {
 }
 
 const goLogin = () => {
-  router.push('/week02/Work01')
+  router.push('/auth/login')
 }
 
 const goSettings = () => {

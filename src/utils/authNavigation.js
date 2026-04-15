@@ -1,5 +1,5 @@
-export const LOGIN_PATH = '/week02/Work01'
-export const DEFAULT_AUTHENTICATED_PATH = '/week04/Work01'
+export const LOGIN_PATH = '/auth/login'
+export const DEFAULT_AUTHENTICATED_PATH = '/app'
 
 let appRouter = null
 

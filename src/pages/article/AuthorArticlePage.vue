@@ -83,16 +83,18 @@ import { Toast } from '@nutui/nutui'
 import { useRoute, useRouter } from 'vue-router'
 import { QIcon } from 'quasar'
 import request from 'src/api/request'
-import ArticleFeedCard from 'components/ArticleFeedCard.vue'
+import ArticleFeedCard from 'components/article/ArticleFeedCard.vue'
+import {
+  getMyItems,
+  getMyReadItemIds,
+  markItemReadApi
+} from 'src/api/articles.js'
 import {
   getMyFollowedUserIds,
-  getMyItems,
   getMyLikedItemIds,
-  getMyReadItemIds,
-  markItemReadApi,
   toggleItemLikeApi,
   toggleUserFollowApi
-} from 'src/api/user'
+} from 'src/api/social.js'
 import { useUserStore } from 'src/stores/useUserStore'
 import { redirectToLogin } from 'src/utils/authNavigation'
 
@@ -407,7 +409,7 @@ const openArticleDetail = (itemId) => {
   if (userStore.token) {
     markItemRead(id).catch(() => {})
   }
-  router.push(`/week06/Work03/${id}`)
+  router.push(`/articles/${id}`)
 }
 
 const openCommentPage = (itemId, title) => {
@@ -416,7 +418,7 @@ const openCommentPage = (itemId, title) => {
     return
   }
   router.push({
-    path: `/week05/Work03/${id}`,
+    path: `/articles/${id}/comments`,
     query: {
       title: String(title || '').trim()
     }

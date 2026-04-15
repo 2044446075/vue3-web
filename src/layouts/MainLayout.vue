@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
       <q-toolbar>
@@ -12,7 +12,7 @@
 
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
       <q-list>
-        <q-item-label header>Vue3 作业</q-item-label>
+        <q-item-label header>Vue3 项目导航</q-item-label>
 
         <template v-for="menuItem in linksList" :key="menuItem.title">
           <q-expansion-item
@@ -42,108 +42,48 @@
 
 <script setup>
 import { ref } from 'vue'
-import EssentialLink from 'components/EssentialLink.vue'
+import EssentialLink from 'components/common/EssentialLink.vue'
 
 const linksList = [
   {
-    title: '第一周',
-    icon: 'date_range',
-    children: [
-      {
-        title: '作业 1.1',
-        caption: 'Pinia 状态管理与模块化',
-        icon: 'settings',
-        link: '/week01/Work01'
-      },
-      {
-        title: '作业 1.2',
-        caption: 'Axios 登录/登出与用户信息',
-        icon: 'settings',
-        link: '/week01/Work02'
-      }
-    ]
-  },
-  {
-    title: '第二周',
-    icon: 'extension',
-    children: [
-      {
-        title: '作业 2.1',
-        caption: 'NutUI 登录与 Token Toast',
-        icon: 'apps',
-        link: '/week02/Work01'
-      },
-      {
-        title: '作业 2.2',
-        caption: 'NutUI 路由与个人信息页',
-        icon: 'person',
-        link: '/week02/Work02'
-      },
-      {
-        title: '作业 2.3',
-        caption: '图片上传组件与二次封装',
-        icon: 'image',
-        link: '/week02/Work03'
-      }
-    ]
-  },
-  {
-    title: '第三周',
+    title: '认证',
     icon: 'badge',
     children: [
       {
-        title: '作业 3.1',
-        caption: '完善个人信息页',
-        icon: 'person',
-        link: '/week03/Work01'
+        title: '登录',
+        caption: '用户登录入口',
+        icon: 'login',
+        link: '/auth/login'
       },
       {
-        title: '作业 3.2',
-        caption: '注册页与表单校验',
+        title: '注册',
+        caption: '用户注册入口',
         icon: 'person_add',
-        link: '/week03/Work02'
+        link: '/auth/register'
       }
     ]
   },
   {
-    title: '第四周',
+    title: '主业务',
     icon: 'dashboard',
     children: [
       {
-        title: '作业 4.1',
-        caption: '底部导航与页面替换',
-        icon: 'view_quilt',
-        link: '/week04/Work01'
+        title: '应用首页',
+        caption: '底部导航与文章流',
+        icon: 'apps',
+        link: '/app'
       },
       {
-        title: '作业 4.2',
-        caption: '卡片文章列表与参数设置',
+        title: '参数设置',
+        caption: '自动刷新与间隔设置',
         icon: 'tune',
-        link: '/week04/Work02'
-      }
-    ]
-  },
-  {
-    title: '第五周',
-    icon: 'forum',
-    children: [
+        link: '/profile/settings'
+      },
       {
-        title: '作业 5.1',
-        caption: '文章评论与我的评论页面',
-        icon: 'comment',
-        link: '/week05/Work01'
-      }
-    ]
-  },
-  {
-    title: '第六周',
-    icon: 'article',
-    children: [
-      {
-        title: '作业 6.2',
-        caption: '文章发布、编辑与详情查看',
+        title: '发布文章',
+        caption: '文章创建与编辑入口',
         icon: 'edit_note',
-        link: '/week06/Work01'
+        link: '/articles/new'
       }
     ]
   }

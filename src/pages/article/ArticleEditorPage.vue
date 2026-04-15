@@ -198,7 +198,7 @@ import {
   updateItemImageApi,
   uploadItemImageApi,
   uploadSimpleImageApi
-} from 'src/api/user'
+} from 'src/api/articles.js'
 import { useRefreshSettingsStore } from 'src/stores/useRefreshSettingsStore'
 import { useUserStore } from 'src/stores/useUserStore'
 
@@ -307,7 +307,7 @@ const canEditOwnerItem = (detail) => {
 const ensureUserReady = async () => {
   if (!userStore.token) {
     Toast.warn('请先登录')
-    router.replace('/week02/Work01')
+    router.replace('/auth/login')
     return false
   }
   if (!userStore.profileAuth || !userStore.profileDetail) {
@@ -431,7 +431,7 @@ const goPreview = () => {
   if (!itemId.value) {
     return
   }
-  router.push(`/week06/Work03/${itemId.value}`)
+  router.push(`/articles/${itemId.value}`)
 }
 
 const uploadSimpleImageFile = async (file) => {
@@ -548,7 +548,7 @@ const saveArticle = async () => {
     settingsStore.markArticleDataDirty()
     await userStore.refreshCounts()
     Toast.success(isEditMode.value ? '文章已更新' : '文章已发布')
-    router.replace(`/week06/Work03/${savedItemId}`)
+    router.replace(`/articles/${savedItemId}`)
   } catch (error) {
     Toast.fail(resolveErrorMessage(error, isEditMode.value ? '更新文章失败' : '发布文章失败'))
   } finally {
@@ -571,7 +571,7 @@ const loadArticle = async () => {
     const detail = res.data || {}
     if (!canEditOwnerItem(detail)) {
       Toast.fail('只能编辑自己的文章')
-      router.replace(`/week06/Work03/${itemId.value}`)
+      router.replace(`/articles/${itemId.value}`)
       return
     }
 

@@ -2,14 +2,13 @@ import { defineStore } from 'pinia'
 import {
   getBriefProfileApi,
   getInfoApi,
-  getMyComments,
-  getMyItems,
   getMyProfile,
-  loginApi,
-  logoutApi,
   updatePasswordApi,
   updateProfileApi
-} from 'src/api/user.js'
+} from 'src/api/profile.js'
+import { loginApi, logoutApi } from 'src/api/auth.js'
+import { getMyComments } from 'src/api/comments.js'
+import { getMyItems } from 'src/api/articles.js'
 
 export const useUserStore = defineStore('user', {
   state: () => ({

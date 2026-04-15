@@ -206,10 +206,9 @@ import {
   createCommentForItem,
   deleteCommentById,
   getCommentsByItem,
-  getCommentsByItemAutoRefresh,
-  getItemDetail,
-  uploadSimpleImageApi
-} from 'src/api/user'
+  getCommentsByItemAutoRefresh
+} from 'src/api/comments.js'
+import { getItemDetail, uploadSimpleImageApi } from 'src/api/articles.js'
 import { useRefreshSettingsStore } from 'src/stores/useRefreshSettingsStore'
 import { useUserStore } from 'src/stores/useUserStore'
 

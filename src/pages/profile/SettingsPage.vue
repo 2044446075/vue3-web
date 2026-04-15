@@ -66,7 +66,7 @@ const decreaseInterval = () => {
 
 const goBack = () => {
   settingsStore.setCurrentTab('profile')
-  router.replace('/week04/Work01')
+  router.replace('/app')
 }
 </script>
 

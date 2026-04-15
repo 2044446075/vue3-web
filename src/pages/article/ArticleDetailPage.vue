@@ -74,7 +74,7 @@ import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { QIcon } from 'quasar'
 import request from 'src/api/request'
-import { getItemDetail, markItemReadApi } from 'src/api/user'
+import { getItemDetail, markItemReadApi } from 'src/api/articles.js'
 import { useUserStore } from 'src/stores/useUserStore'
 
 defineOptions({
@@ -185,7 +185,7 @@ const goEdit = () => {
   if (!itemId.value || !canEditArticle.value) {
     return
   }
-  router.push(`/week06/Work02/${itemId.value}`)
+  router.push(`/articles/${itemId.value}/edit`)
 }
 
 const loadArticleDetail = async () => {

@@ -95,11 +95,13 @@
                     </q-btn>
                   </div>
 
-                  <div class="row items-center q-gutter-sm q-mt-md">
+                  <div class="row items-center q-gutter-sm q-mt-md recommendation-carousel__actions">
                     <q-btn
                       unelevated
                       color="white"
                       text-color="dark"
+                      no-caps
+                      class="recommendation-carousel__action-btn"
                       label="阅读文章"
                       @click.stop="openArticleDetail(item.id)"
                     />
@@ -107,6 +109,8 @@
                       flat
                       color="white"
                       icon="chat_bubble_outline"
+                      no-caps
+                      class="recommendation-carousel__action-btn recommendation-carousel__action-btn--comment"
                       @click.stop="openCommentPage(item.id, item.rawTitle)"
                     >
                       <span class="q-ml-xs">{{ item.commentCount }}</span>
@@ -426,7 +430,7 @@
           <UserProfilePanel
             :student-title="studentTitle"
             :show-settings-entry="true"
-            settings-route="/week04/Work02"
+            settings-route="/profile/settings"
           />
         </div>
       </section>
@@ -501,16 +505,11 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { Toast } from '@nutui/nutui'
 import { useRouter } from 'vue-router'
 import request from 'src/api/request'
-import ArticleFeedCard from 'components/ArticleFeedCard.vue'
-import UserProfilePanel from 'components/UserProfilePanel.vue'
+import ArticleFeedCard from 'components/article/ArticleFeedCard.vue'
+import UserProfilePanel from 'components/profile/UserProfilePanel.vue'
 import {
-  deleteCommentById,
-  deleteItemApi,
   getAllItems,
-  getFollowUnreadItemsApi,
   getItemDetail,
-  getMyComments,
-  getMyLikedItemIds,
   getMyItems,
   getMyReadItemIds,
   getRecommendedItemsApi,
@@ -518,8 +517,14 @@ import {
   getUserItemsProfileApi,
   getUsersApi,
   markItemReadApi,
+  deleteItemApi
+} from 'src/api/articles.js'
+import { deleteCommentById, getMyComments } from 'src/api/comments.js'
+import {
+  getFollowUnreadItemsApi,
+  getMyLikedItemIds,
   toggleItemLikeApi
-} from 'src/api/user'
+} from 'src/api/social.js'
 import { useRefreshSettingsStore } from 'src/stores/useRefreshSettingsStore'
 import { useUserStore } from 'src/stores/useUserStore'
 import { redirectToLogin } from 'src/utils/authNavigation'
@@ -543,7 +548,7 @@ const tabs = computed(() => [
   { name: 'all', title: '全部文章', icon: 'category' },
   { name: 'items', title: '我的文章', icon: 'home' },
   { name: 'comments', title: '我的评论', icon: 'message' },
-  { name: 'follows', title: '我的关注', icon: 'friends' },
+  { name: 'follows', title: '我的关注', icon: 'follow' },
   { name: 'profile', title: defaultRealName, icon: 'my' }
 ])
 
@@ -1269,7 +1274,7 @@ const openCommentPage = (itemId, title) => {
     rememberAllScrollPosition()
   }
   router.push({
-    path: `/week05/Work03/${id}`,
+    path: `/articles/${id}/comments`,
     query: {
       title: String(title || '').trim()
     }
@@ -1285,7 +1290,7 @@ const openAuthorArticles = (item) => {
     rememberAllScrollPosition()
   }
   router.push({
-    path: `/week06/Work04/${userUuid}`,
+    path: `/authors/${userUuid}/articles`,
     query: {
       name: String(item?.authorName || '').trim(),
       avatar: String(item?.authorAvatar || '').trim()
@@ -1305,7 +1310,7 @@ const openArticleDetail = (itemId, options = {}) => {
     markItemRead(id).catch(() => {})
   }
   router.push({
-    path: `/week06/Work03/${id}`,
+    path: `/articles/${id}`,
     query: options.editable ? { editable: '1' } : undefined
   })
 }
@@ -1315,7 +1320,7 @@ const goCreateArticle = () => {
     myError.value = '请先登录后发布文章'
     return
   }
-  router.push('/week06/Work02')
+  router.push('/articles/new')
 }
 
 const canEditItem = (item) => {
@@ -1744,6 +1749,22 @@ onBeforeUnmount(() => {
 
 .recommendation-carousel__overlay {
   background: linear-gradient(180deg, rgba(15, 23, 42, 0.12) 0%, rgba(15, 23, 42, 0.82) 100%);
+}
+
+.recommendation-carousel__actions {
+  position: relative;
+  z-index: 3;
+  pointer-events: auto;
+}
+
+.recommendation-carousel__action-btn {
+  position: relative;
+  z-index: 3;
+  pointer-events: auto;
+}
+
+.recommendation-carousel__action-btn--comment :deep(.q-btn__content) {
+  gap: 2px;
 }
 
 .recommendation-carousel__title {
